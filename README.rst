@@ -21,8 +21,8 @@ libvirt_provider
 A handy wrapper around libvirt-api written in python.
 
 
-* Free software: MIT license
-* Documentation: https://python-libvirt_provider.readthedocs.io.
+- Free software: MIT license
+- Documentation: https://python-libvirt_provider.readthedocs.io.
 
 
 Warning
@@ -31,10 +31,40 @@ Warning
 This repository is under heavy development and is not yet usable.
 
 
-Features
---------
+Roadmap
+-------
 
-* TODO
+- [ ] Implement libvirt related features:
+
+  - [ ] Storage
+
+  - [ ] Network
+
+  - [ ] Monitoring
+
+  - [ ] Logging
+
+  - [ ] Devices
+
+  - [ ] Domain
+
+  - [ ] Capabilities
+
+- [ ] Implement other features:
+
+  - [ ] REST API
+
+  - [ ] CLI
+
+  - [ ] Manager
+
+  - [ ] Exceptions
+
+  - [ ] Templating
+
+  - [ ] Configuration
+
+  - [ ] Overlay XML (inject/customize libvirt XML)
 
 Credits
 ---------
