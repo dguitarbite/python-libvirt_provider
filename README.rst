@@ -3,8 +3,8 @@ libvirt_provider
 ===============================
 
 
-.. image:: https://img.shields.io/pypi/v/python-libvirt_provider.svg
-        :target: https://pypi.python.org/pypi/python-libvirt_provider
+.. image:: https://img.shields.io/pypi/v/libvirt_provider.svg
+        :target: https://pypi.python.org/pypi/libvirt_provider
 
 .. image:: https://img.shields.io/travis/dguitarbite/python-libvirt_provider.svg
         :target: https://travis-ci.org/dguitarbite/python-libvirt_provider
