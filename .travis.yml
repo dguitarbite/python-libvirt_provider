@@ -5,26 +5,9 @@ os: linux
 dist: trusty
 sudo: require
 
-# Credit goes to: https://github.com/rgbkrk/libvirt-go/blob/master/.travis.yml
 before_install:
-  - sudo apt-get -qqy build-dep libvirt libvirt-devel
-  - sudo apt-get -qqy install curl qemu-system-x86 sasl2-bin
-  - sudo mkdir -p /usr/src && sudo chown $(id -u) /usr/src
-  - curl -O -s https://libvirt.org/sources/libvirt-${LIBVIRT}.tar.${EXT}
-  - tar -C /usr/src -xf libvirt-${LIBVIRT}.tar.${EXT}
-  - pushd /usr/src/libvirt-${LIBVIRT}
-  - |
-        ./configure --prefix=/usr --localstatedir=/var --sysconfdir=/etc \
-                    --without-polkit \
-                    --without-esx --without-vbox --without-xen --without-libxl \
-                    --with-qemu --with-lxc
-  - make
-  - sudo make install
-  - popd
-  - sudo libvirtd -d -l -f libvirtd.conf
-  - sudo virtlogd -d || true
-  - sudo chmod a+rwx /var/run/libvirt/libvirt-sock*
-  - echo "pass" | sudo saslpasswd2 -p -a libvirt user
+  - sudo apt-get -qq update
+  - sudo apt-get install -qqy libvirt-bin libvirt-dev kvm
 
 deploy:
   true:
