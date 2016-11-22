@@ -6,7 +6,7 @@ dist: trusty
 sudo: require
 
 # Credit goes to: https://github.com/rgbkrk/libvirt-go/blob/master/.travis.yml
-install:
+before_install:
   - sudo apt-get -qqy build-dep libvirt libvirt-devel
   - sudo apt-get -qqy install curl qemu-system-x86 sasl2-bin
   - sudo mkdir -p /usr/src && sudo chown $(id -u) /usr/src
