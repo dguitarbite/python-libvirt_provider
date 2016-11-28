@@ -16,4 +16,4 @@ pylint
 pylint-common
 fluff
 pylint-mccabe
-pylint_runner
+pylint-runner==0.3
