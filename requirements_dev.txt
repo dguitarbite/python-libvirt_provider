@@ -16,4 +16,4 @@ pylint==1.6.4
 pylint-common
 fluff==0.1.1
 pylint-mccabe
-pylint_runner
+pylint-runner==0.3
