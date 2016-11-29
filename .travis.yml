@@ -7,7 +7,7 @@ sudo: require
 
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get install -qqy libvirt-bin libvirt-dev kvm
+  - sudo apt-get install -qqy libvirt-bin libvirt-dev qemu-kvm bridge-utils
 
 deploy:
   true:
