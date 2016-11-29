@@ -25,7 +25,7 @@ setup(
     long_description=readme + '\n\n' + history,
     author="Pranav Salunke",
     author_email='dguitarbite@gmail.com',
-    url='https://github.com/dguitarbite/libvirt_provider',
+    url='https://github.com/dguitarbite/python-libvirt_provider',
     packages=[
         'libvirt_provider',
     ],
