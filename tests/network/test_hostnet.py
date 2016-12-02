@@ -76,3 +76,24 @@ def test_network_stop(vnetobj):
     vnetobj.start(net_xml)
     result = vnetobj.stop(name='teststop')
     assert result == 0
+
+
+def test_list_networks(vnetobj):
+
+    libvirt_conn = libvirt.open('qemu:///system')
+    expected_result = libvirt_conn.listNetworks()
+    libvirt_conn.close()
+    result = vnetobj.list()
+    assert result == expected_result
+
+
+def test_list_network(vnetobj):
+
+    net_xml = _get_netxml(name='testlistnet')
+    vnetobj.create(net_xml)
+    libvirt_conn = libvirt.open('qemu:///system')
+    expected_result = libvirt_conn.networkLookupByName('testlistnet').XMLDesc()
+    libvirt_conn.close()
+    result = vnetobj.list(name='testlistnet')
+    vnetobj.destroy(name='testlistnet')
+    assert result == expected_result

@@ -102,10 +102,13 @@ class HostNet(object):
 
         pass
 
-    def list(self):
-        """List existing networks or details of the given network."""
+    def list(self, name=None):
+        """List existing networks or details (XML) of the given network."""
 
-        pass
+        if name:
+            return self._get_vnetobj(name=name).XMLDesc()
+        else:
+            return self.conn.listNetworks()
 
     def _get_vnetobj(self, **kwargs):
         """Helper function to get virNetwork object.
