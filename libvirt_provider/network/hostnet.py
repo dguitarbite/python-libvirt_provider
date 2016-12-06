@@ -88,7 +88,9 @@ class HostNet(object):
     def start(self, xml_desc):
         """Create an existing network domain."""
 
-        self.conn.networkCreateXML(xml_desc)
+        vnetobj = self.conn.networkCreateXML(xml_desc)
+
+        return vnetobj
 
     def stop(self, **kwargs):
         """Destroy an existing network domain."""
@@ -97,10 +99,58 @@ class HostNet(object):
 
         return vnetobj.destroy()
 
-    def update(self):
-        """Update a given network domain."""
+    def update(self, net_name, command, section, parent_index, net_xml, flags):
+        """Update a given network domain.
 
-        pass
+        These parameters are deciding specifics for updating the network.
+
+            - command: 'none', 'first', 'last', 'delete', 'modify'
+                By default it modifies the existing network.
+            - section: 'none', 'bridge', 'ip', 'dns_host', 'dns_srv',
+                To update a given section, by default it is none
+            - flags: Edit the 'config', 'current', 'live' net domain.
+        """
+
+        import libvirt  # TODO(dbite): Pass these params on init instead.
+        vnetobj = self._get_vnetobj(name=net_name)
+
+        vircommand = {
+            'none': libvirt.VIR_NETWORK_UPDATE_COMMAND_NONE,
+            'first': libvirt.VIR_NETWORK_UPDATE_COMMAND_ADD_FIRST,
+            'last': libvirt.VIR_NETWORK_UPDATE_COMMAND_ADD_LAST,
+            'delete': libvirt.VIR_NETWORK_UPDATE_COMMAND_DELETE,
+            'modify': libvirt.VIR_NETWORK_UPDATE_COMMAND_MODIFY,
+        }
+
+        virflags = {
+            'config': libvirt.VIR_NETWORK_UPDATE_AFFECT_CONFIG,
+            'current': libvirt.VIR_NETWORK_UPDATE_AFFECT_CURRENT,
+            'live': libvirt.VIR_NETWORK_UPDATE_AFFECT_LIVE,
+        }
+
+        virnetworksection = {
+            'bridge': libvirt.VIR_NETWORK_SECTION_BRIDGE,
+            'dns_host': libvirt.VIR_NETWORK_SECTION_DNS_HOST,
+            'dns_srv': libvirt.VIR_NETWORK_SECTION_DNS_SRV,
+            'dns_txt': libvirt.VIR_NETWORK_SECTION_DNS_TXT,
+            'domain': libvirt.VIR_NETWORK_SECTION_DOMAIN,
+            'forward': libvirt.VIR_NETWORK_SECTION_FORWARD,
+            'forward_interface':
+                libvirt.VIR_NETWORK_SECTION_FORWARD_INTERFACE,
+            'forward_pf': libvirt.VIR_NETWORK_SECTION_FORWARD_PF,
+            'ip': libvirt.VIR_NETWORK_SECTION_IP,
+            'ip_dhcp_host': libvirt.VIR_NETWORK_SECTION_IP_DHCP_HOST,
+            'ip_dhcp_range': libvirt.VIR_NETWORK_SECTION_IP_DHCP_RANGE,
+            'none': libvirt.VIR_NETWORK_SECTION_NONE,
+            'portgroup': libvirt.VIR_NETWORK_SECTION_PORTGROUP,
+        }
+
+        command = vircommand[command]
+        section = virnetworksection[section]
+        flags = virflags[flags]
+
+        return vnetobj.update(command, section, parent_index, net_xml,
+                              flags=flags)
 
     def list(self, name=None):
         """List existing networks or details (XML) of the given network."""
