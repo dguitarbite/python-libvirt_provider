@@ -108,6 +108,7 @@ class HostNet(object):
                 By default it modifies the existing network.
             - section: 'none', 'bridge', 'ip', 'dns_host', 'dns_srv',
                 To update a given section, by default it is none
+            - parent_index: The index of the parent XML tag.
             - flags: Edit the 'config', 'current', 'live' net domain.
         """
 
