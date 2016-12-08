@@ -3,9 +3,11 @@ class HostNet(object):
 
     Higher level tasks like creation, deletion are implemented as per
     the life-cycle of the lower level definitions. These tasks are
-    simply assemble the methods which implement the finer details.
+    bound to the libvirt.conn object which defines certain actions.
     The finder details are abstracted based on similarities like
     properties and definitions of the given network related topic.
+    They are carried out after getting the virNetwork object and
+    provider finer details to work with.
 
     The finer implementation details like: network protocols (DHCP),
     types of networks (NAT, routed, isolated, bridged etc.) are
@@ -41,7 +43,7 @@ class HostNet(object):
           </portgroup>
         </network>
 
-    Before passing this XML snippet to libvirt, XML Overlay mechanism should
+    Before passing this XML snippet to libvirt, XML overlay mechanism should
     allow further customization for the same.
     """
 
