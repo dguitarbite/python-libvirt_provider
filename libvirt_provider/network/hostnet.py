@@ -88,7 +88,11 @@ class HostNet(object):
         return vnetobj.undefine()
 
     def start(self, xml_desc):
-        """Create an existing network domain."""
+        """Create a network domain.
+
+        Starts an existing network domain. Creates a non-persistent domain
+        if not existing.
+        """
 
         vnetobj = self.conn.networkCreateXML(xml_desc)
 
@@ -170,7 +174,7 @@ class HostNet(object):
         {
             name: <name of the network>,
             uuid: <uuid of the network>,
-            uuid_str: <uuid in string format>,
+            uuid_str: <uuid in string format of the network>,
         }
         """
 
