@@ -113,3 +113,12 @@ To run a subset of tests::
 
 $ py.test tests.test_libvirt_provider
 
+Additional Information
+----------------------
+
+* Releases: Version number is stored in libvirt_provider/__init__.py and imported
+  in setup.py to unify the versioning system.
+* Git tags will be used to mark stable and significant releases. This should allow
+  easy identification of which version to use.
+* At present releasing a stable release (git tag with RC) is ad-hoc and does not follow
+  strict timelines.

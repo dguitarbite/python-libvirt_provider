@@ -14,9 +14,16 @@ libvirt_provider
         :alt: Documentation Status
 
 .. image:: https://pyup.io/repos/github/dguitarbite/python-libvirt_provider/shield.svg
-     :target: https://pyup.io/repos/github/dguitarbite/python-libvirt_provider/
-     :alt: Updates
+        :target: https://pyup.io/repos/github/dguitarbite/python-libvirt_provider/
+        :alt: Updates
 
+.. image:: https://codecov.io/gh/dguitarbite/python-libvirt_provider/branch/master/graph/badge.svg
+        :target: https://codecov.io/gh/dguitarbite/python-libvirt_provider
+        :alt: Code Coverage
+
+.. image:: https://landscape.io/github/dguitarbite/python-libvirt_provider/master/landscape.svg?style=flat
+        :target: https://landscape.io/github/dguitarbite/python-libvirt_provider/master
+        :alt: Code Health
 
 A handy wrapper around libvirt-api written in python.
 
@@ -38,7 +45,7 @@ Roadmap
 
   - [ ] Storage
 
-  - [ ] Network
+  - [x] Network
 
   - [ ] Monitoring
 

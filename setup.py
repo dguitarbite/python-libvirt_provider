@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup
+import libvirt_provider
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
@@ -20,7 +21,7 @@ test_requirements = [
 
 setup(
     name='libvirt_provider',
-    version='0.0.1',
+    version=libvirt_provider.__version__,
     description="A handy wrapper around libvirt-api written in python.",
     long_description=readme + '\n\n' + history,
     author="Pranav Salunke",
