@@ -50,7 +50,7 @@ class HostNet(object):
     def __init__(self, conn, **kwargs):
         """Initializing the Network module.
 
-    Libvirt connection object or libvirt connection URI required to
+    Libvirt connection object or libvirt connection URI is required to
     connect to libvirt on the host.
 
     Description of various values, properties and flags. These could
