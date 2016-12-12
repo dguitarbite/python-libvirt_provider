@@ -1,0 +1,174 @@
+class Storage(object):
+    """Storage class manages storage pool & vol related tasks of libvirt.
+
+    Higher level tasks like creation, deletion are implemented as per the
+    life-cycle of the lower level definitions. These tasks are bound to the
+    libvirt.conn object and usually deal with certain type of tasks like
+    creation, deletion, searching etc.
+
+    The finer details for storage pool are fetched from the higher level
+    methods which provide the virStoragePool object and they enable more
+    possibilities in managing the storage pool, and its underlying resources
+    (storage volumes).
+
+    Various properties and flags which define the interaction of storage pools
+    and the underlying volumes are concerned with various tasks like active,
+    inactive, autostart, list volumes, create, destroy etc. for both the
+    given storage pool and the underlying volumes.
+
+    Example XML snippet (Storage Pool):
+        <pool type="dir">
+          <name>virtimages</name>
+          <target>
+            <path>/var/lib/virt/images</path>
+          </target>
+        </pool>
+
+    Example XML snippet(Storage Volume):
+        <volume>
+          <name>sparse.img</name>
+          <allocation>0</allocation>
+          <capacity unit="T">1</capacity>
+          <target>
+            <path>/var/lib/virt/images/sparse.img</path>
+            <permissions>
+              <owner>107</owner>
+              <group>107</group>
+              <mode>0744</mode>
+              <label>virt_image_t</label>
+            </permissions>
+          </target>
+        </volume>
+
+
+
+    Before passing the XML snippet to libvirt, XML overlay mechanism should
+    allow further customization for the same.
+    """
+
+    def __init__(self, conn, **kwargs):
+        """Initializing the StoragePool module.
+
+    Libvirt connection object or libvirt connection URI is required to connect
+    to libvirt on the host.
+
+    Description of various values, properties and flags could be passed as
+    optional variables. These variables should be used, and override defaults
+    unless explicitly overridden.
+    """
+
+        # TODO(dbite): Rethink the libvirt.conn object handling and it's scope.
+        if conn:
+            self.conn = conn
+        else:
+            raise   # Raise the correct exception here.
+
+        self.kwargs = kwargs
+
+    ###########################################################################
+    #   Storage Pool
+    ###########################################################################
+
+    def create_pool(self, xml_desc, **kwargs):
+        """Define new storage pool."""
+
+        return self.conn.storagePoolDefineXML()
+
+    def destroy_pool(self, **kwargs):
+        """Undefine an existing storage domain by name, uuid or uuidstr."""
+
+        vspobj = self._get_vspobj(**kwargs)
+
+        return vspobj.undefine()
+
+    def start_pool(self, xml_desc):
+        """Create a storage pool.
+
+        Starts an existing storage pool. Creates a non-persistent domain if
+        not existing.
+        """
+
+        return self.conn.storagePoolCreateXML()
+
+    def stop_pool(self, **kwargs):
+        """Destroy an existing storage pool domain."""
+
+        vspobj = self._get_vspobj(**kwargs)
+
+        return vspobj.destroy()
+
+    def _get_vspobj(self, **kwargs):
+        """Helper function to get virStoragePool object.
+
+        Accepts the following arguments, but only uses one (random).
+        {
+            name: <name of the storage pool>,
+            uuid: <uuid of the storage pool>,
+            uuid_str: <uuid in string format of the storage pool>
+        }
+        """
+
+        lookup_table = {
+            'name': self.conn.storagePoolLookupByName,
+            'uuid': self.conn.storagePoolLookupByUUID,
+            'uuid_str': self.conn.storagePoolLookupByUUIDString,
+        }
+
+        key, value = kwargs.popitem()
+
+        return lookup_table[key](value)
+
+    ###########################################################################
+    #   Storage Volume
+    ###########################################################################
+
+    def create_vol(self, xml_desc, **kwargs):
+        """Define new storage volume."""
+
+        return self.conn.storageVolDefineXML()
+
+    def destroy_vol(self, xml_desc, **kwargs):
+        """Undefine an existing storage domain by name, uuid or uuidstr."""
+
+        vsvobj = self._get_vsvobj(**kwargs)
+
+        return vsvobj.undefine()
+
+    def start_vol(self, xml_desc):
+        """Create a storage volume.
+
+        Starts an existing storage vol. Creates a non-persistent domain if not
+        existing.
+        """
+
+        return self.conn.storageVolCreateXML()
+
+    def stop_vol(self, **kwargs):
+        """Create a storage volume.
+
+        Starts an existing storage volume. Creates a non-persistent volume if
+        not existing.
+        """
+
+        vsvobj = self._get_vsvobj(**kwargs)
+
+        return vsvobj.destroy()
+
+    def _get_vsvobj(self, **kwargs):
+        """Helper function to get virStorageVol object.
+
+        Accepts the following arguments, but only uses one (random).
+        {
+            'key': <globally unique key>,
+            'path': <path of the storage volume>,
+        }
+        """
+
+        lookup_table = {
+            'key': self.conn.storageVolLookupByKey,
+            'path': self.conn.storageVolLookupByPath,
+        }
+
+        key, value = kwargs.popitem()
+
+        return lookup_table[key](value)
