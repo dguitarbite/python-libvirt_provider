@@ -43,7 +43,7 @@ Roadmap
 
 - [ ] Implement libvirt related features:
 
-  - [ ] Storage
+  - [x] Storage
 
   - [x] Network
 

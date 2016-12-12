@@ -69,10 +69,11 @@ class Storage(object):
     #   Storage Pool
     ###########################################################################
 
-    def create_pool(self, xml_desc, **kwargs):
+    def create_pool(self, xml_desc, flags=0):
         """Define new storage pool."""
+        # TODO(dbite): Figure out a nice way to handle the flags.
 
-        return self.conn.storagePoolDefineXML()
+        return self.conn.storagePoolDefineXML(xml_desc, flags)
 
     def destroy_pool(self, **kwargs):
         """Undefine an existing storage domain by name, uuid or uuidstr."""
@@ -81,14 +82,14 @@ class Storage(object):
 
         return vspobj.undefine()
 
-    def start_pool(self, xml_desc):
+    def start_pool(self, xml_desc, flags=0):
         """Create a storage pool.
 
         Starts an existing storage pool. Creates a non-persistent domain if
         not existing.
         """
 
-        return self.conn.storagePoolCreateXML()
+        return self.conn.storagePoolCreateXML(xml_desc, flags)
 
     def stop_pool(self, **kwargs):
         """Destroy an existing storage pool domain."""
@@ -125,7 +126,7 @@ class Storage(object):
     def create_vol(self, xml_desc, **kwargs):
         """Define new storage volume."""
 
-        return self.conn.storageVolDefineXML()
+        return self.conn.storageVolDefineXML(xml_desc)
 
     def destroy_vol(self, xml_desc, **kwargs):
         """Undefine an existing storage domain by name, uuid or uuidstr."""
@@ -141,7 +142,7 @@ class Storage(object):
         existing.
         """
 
-        return self.conn.storageVolCreateXML()
+        return self.conn.storageVolCreateXML(xml_desc)
 
     def stop_vol(self, **kwargs):
         """Create a storage volume.
