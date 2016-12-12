@@ -106,19 +106,46 @@ Before you submit a pull request, check that it meets these guidelines:
    https://travis-ci.org/dguitarbite/python-libvirt_provider/pull_requests
    and make sure that the tests pass for all supported Python versions.
 
+Release Model
+-------------
+
+This project follows release model specified by .. _PEP-0440.: https://www.python.org/dev/peps/pep-0440/
+
+- Releases: Version number is stored in libvirt_provider/__init__.py and imported
+  in setup.py to unify the versioning system.
+- Git tags will be used to mark stable and significant releases. This should allow
+  easy identification of which version to use.
+- At present releasing a stable release (git tag with RC) is ad-hoc and does not follow
+  strict timelines.
+- Release scheme X.Y.Z (Major.Minor.Micro):
+  - `X`: Major release.
+  - `Y`: Minor release.
+  - `Z`: Micro release.
+- Incrementing `X` would signify new stable version.
+  - This version bump signifies stable version.
+  - Using annotated git tags for these releases.
+  - Further improvements, backports etc. would be signified with a rc release tag if required.
+  - Bugs are treated with higher priority.
+  - Only critical feature improvements and bug fixes are backported.
+- Incrementing `Y` would signify new major features.
+  - This version bump signifies minor release with major features.
+  - Using annotated git tags for these releases.
+  - These features are usually stable enough to be used but they are not explicitly tested from the system level.
+    - Test cases for integration and system level testing will be implemented.
+    - But, this does not guarantee high stability and should be considered bleeding edge.
+  - These release should usually be done at the sub-system level, aggregating multiple units.
+- Incrementing Z would signify new minor features.
+  - This version bump signifies micro release.
+  - Using lightweight git tags for these releases.
+  - These release should be fast moving, doing most of the new implementations and considered unstable.
+    - Implementing new features mostly at the unit level.
+    - Should not be relied upon, highly unstable.
+    - Unit tests should be implemented.
+    - Other tests are implemented as needed.
+
 Tips
 ----
 
 To run a subset of tests::
 
 $ py.test tests.test_libvirt_provider
-
-Additional Information
-----------------------
-
-* Releases: Version number is stored in libvirt_provider/__init__.py and imported
-  in setup.py to unify the versioning system.
-* Git tags will be used to mark stable and significant releases. This should allow
-  easy identification of which version to use.
-* At present releasing a stable release (git tag with RC) is ad-hoc and does not follow
-  strict timelines.
