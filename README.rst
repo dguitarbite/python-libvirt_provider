@@ -25,8 +25,12 @@ libvirt_provider
         :target: https://landscape.io/github/dguitarbite/python-libvirt_provider/master
         :alt: Code Health
 
-A handy wrapper around libvirt-api written in python.
+.. image:: https://scrutinizer-ci.com/g/dguitarbite/python-libvirt_provider/badges/quality-score.png?b=master
+        :target: https://scrutinizer-ci.com/g/dguitarbite/python-libvirt_provider/?branch=master
+        :alt: Scrutinizer Code Quality
 
+
+A handy wrapper around libvirt-api written in python.
 
 - Free software: MIT license
 - Documentation: https://python-libvirt_provider.readthedocs.io.
