@@ -25,4 +25,5 @@ env:
 install: pip install -U tox
 script: tox -e ${TOXENV}
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - pip install codecov
+  - codecov -e TOXENV TRAVIS_OS_NAME

@@ -16,3 +16,5 @@ pylint-common==0.2.2
 fluff==0.1.1
 pylint-mccabe==0.1.3
 pylint-runner==0.3
+pytest-cov
+pytest-mock
