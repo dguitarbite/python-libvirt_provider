@@ -12,7 +12,7 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     'Click>=6.0',
-    'libvirt-python>=2.4',
+    'libvirt-python>=2.5',
 ]
 
 test_requirements = [
