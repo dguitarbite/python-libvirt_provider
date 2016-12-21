@@ -3,13 +3,15 @@
 import click
 
 
-@click.command()
-def main(args=None):
-    """Console script for libvirt_provider"""
-    click.echo("Replace this message by putting your code into "
-               "libvirt_provider.cli.main")
-    click.echo("See click documentation at http://click.pocoo.org/")
+@click.group()
+def cli():
+    """Python libvirt provider."""
+
+
+@cli.command('dummy', short_help="just a dummy example text")
+def dummy():
+    """Dummy stub ..."""
 
 
 if __name__ == "__main__":
-    main()
+    cli()

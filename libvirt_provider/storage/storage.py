@@ -123,12 +123,12 @@ class Storage(object):
     #   Storage Volume
     ###########################################################################
 
-    def create_vol(self, xml_desc, **kwargs):
+    def create_vol(self, xml_desc):
         """Define new storage volume."""
 
         return self.conn.storageVolDefineXML(xml_desc)
 
-    def destroy_vol(self, xml_desc, **kwargs):
+    def destroy_vol(self, **kwargs):
         """Undefine an existing storage domain by name, uuid or uuidstr."""
 
         vsvobj = self._get_vsvobj(**kwargs)

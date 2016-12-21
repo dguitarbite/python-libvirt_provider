@@ -75,7 +75,7 @@ class HostNet(object):
 
         self.kwargs = kwargs
 
-    def create(self, xml_desc, **kwargs):
+    def create(self, xml_desc):
         """Define a new network domain."""
 
         return self.conn.networkDefineXML(xml_desc)
@@ -105,7 +105,7 @@ class HostNet(object):
 
         return vnetobj.destroy()
 
-    def update(self, net_name, command, section, parent_index, net_xml, flags):
+    def update(self, net_name, net_xml, **kwargs):
         """Update a given network domain.
 
         These parameters are deciding specifics for updating the network.
@@ -152,9 +152,10 @@ class HostNet(object):
             'portgroup': libvirt.VIR_NETWORK_SECTION_PORTGROUP,
         }
 
-        command = vircommand[command]
-        section = virnetworksection[section]
-        flags = virflags[flags]
+        command = vircommand[kwargs['command']]
+        section = virnetworksection[kwargs['section']]
+        flags = virflags[kwargs['flags']]
+        parent_index = kwargs['parent_index']
 
         return vnetobj.update(command, section, parent_index, net_xml,
                               flags=flags)

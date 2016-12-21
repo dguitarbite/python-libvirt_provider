@@ -125,20 +125,32 @@ def test_update_config(vnetobj):
 
     # Delete.
     xml_snippet = "<range start='10.7.5.5' end='10.7.5.25'></range>"
-    actual_result = vnetobj.update('testupdateconfig', 'delete',
-                                   'ip_dhcp_range', 0, xml_snippet, flags)
+    actual_result = vnetobj.update('testupdateconfig',
+                                   xml_snippet,
+                                   command='delete',
+                                   section='ip_dhcp_range',
+                                   parent_index=0,
+                                   flags=flags)
     assert actual_result is 0
 
     # First.
     xml_snippet = "<range start='10.7.5.115' end='10.7.5.155'></range>"
-    actual_result = vnetobj.update('testupdateconfig', 'first',
-                                   'ip_dhcp_range', 0, xml_snippet, flags)
+    actual_result = vnetobj.update('testupdateconfig',
+                                   xml_snippet,
+                                   command='first',
+                                   section='ip_dhcp_range',
+                                   parent_index=0,
+                                   flags=flags)
     assert actual_result is 0
 
     # Last.
     xml_snippet = "<range start='10.7.5.15' end='10.7.5.55'></range>"
-    actual_result = vnetobj.update('testupdateconfig', 'last', 'ip_dhcp_range',
-                                   0, xml_snippet, flags)
+    actual_result = vnetobj.update('testupdateconfig',
+                                   xml_snippet,
+                                   command='last',
+                                   section='ip_dhcp_range',
+                                   parent_index=0,
+                                   flags=flags)
     assert actual_result is 0
 
     # Destroy test network.
@@ -157,20 +169,32 @@ def test_update_all(vnetobj):
 
     # Delete.
     xml_snippet = "<range start='10.7.5.5' end='10.7.5.25'></range>"
-    actual_result = vnetobj.update('testupdateall', 'delete', 'ip_dhcp_range',
-                                   0, xml_snippet, flags)
+    actual_result = vnetobj.update('testupdateall',
+                                   xml_snippet,
+                                   command='delete',
+                                   section='ip_dhcp_range',
+                                   parent_index=0,
+                                   flags=flags)
     assert actual_result is 0
 
     # First.
     xml_snippet = "<range start='10.7.5.115' end='10.7.5.155'></range>"
-    actual_result = vnetobj.update('testupdateall', 'first', 'ip_dhcp_range',
-                                   0, xml_snippet, flags)
+    actual_result = vnetobj.update('testupdateall',
+                                   xml_snippet,
+                                   command='first',
+                                   section='ip_dhcp_range',
+                                   parent_index=0,
+                                   flags=flags)
     assert actual_result is 0
 
     # Last.
     xml_snippet = "<range start='10.7.5.15' end='10.7.5.55'></range>"
-    actual_result = vnetobj.update('testupdateall', 'last', 'ip_dhcp_range', 0,
-                                   xml_snippet, flags)
+    actual_result = vnetobj.update('testupdateall',
+                                   xml_snippet,
+                                   command='last',
+                                   section='ip_dhcp_range',
+                                   parent_index=0,
+                                   flags=flags)
     assert actual_result is 0
 
     # Destroy test network.
@@ -189,20 +213,32 @@ def test_update_live(vnetobj):
 
     # Delete.
     xml_snippet = "<range start='10.7.5.5' end='10.7.5.25'></range>"
-    actual_result = vnetobj.update('testupdatelive', 'delete', 'ip_dhcp_range',
-                                   0, xml_snippet, flags)
+    actual_result = vnetobj.update('testupdatelive',
+                                   xml_snippet,
+                                   command='delete',
+                                   section='ip_dhcp_range',
+                                   parent_index=0,
+                                   flags=flags)
     assert actual_result is 0
 
     # First.
     xml_snippet = "<range start='10.7.5.115' end='10.7.5.155'></range>"
-    actual_result = vnetobj.update('testupdatelive', 'first', 'ip_dhcp_range',
-                                   0, xml_snippet, flags)
+    actual_result = vnetobj.update('testupdatelive',
+                                   xml_snippet,
+                                   command='first',
+                                   section='ip_dhcp_range',
+                                   parent_index=0,
+                                   flags=flags)
     assert actual_result is 0
 
     # Last.
     xml_snippet = "<range start='10.7.5.15' end='10.7.5.55'></range>"
-    actual_result = vnetobj.update('testupdatelive', 'last', 'ip_dhcp_range',
-                                   0, xml_snippet, flags)
+    actual_result = vnetobj.update('testupdatelive',
+                                   xml_snippet,
+                                   command='last',
+                                   section='ip_dhcp_range',
+                                   parent_index=0,
+                                   flags=flags)
     assert actual_result is 0
 
     # Destroy test network.
