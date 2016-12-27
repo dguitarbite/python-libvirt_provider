@@ -123,49 +123,43 @@ class Storage(object):
     #   Storage Volume
     ###########################################################################
 
-    def create_vol(self, xml_desc):
-        """Define new storage volume."""
+    def create_vol(self, xml_desc, flags=0, **kwargs):
+        """Defines a new persistent storage volume."""
 
-        return self.conn.storageVolDefineXML(xml_desc)
+        vspobj = self._get_vspobj(**kwargs)
 
-    def destroy_vol(self, **kwargs):
+        return vspobj.createXML(xml_desc, flags)
+
+    def clone_vol(self, xml_desc, clonevol, flags=0, **kwargs):
+        """Create a new volume by copying an existing volume (clone)."""
+
+        vspobj = self._get_vspobj(**kwargs)
+
+        return vspobj.createXMLFrom(xml_desc, clonevol, flags=0)
+
+    def destroy_vol(self, vspobj=None, **kwargs):
         """Undefine an existing storage domain by name, uuid or uuidstr."""
 
-        vsvobj = self._get_vsvobj(**kwargs)
+        vsvobj = self._get_vsvobj(vspobj, **kwargs)
 
-        return vsvobj.undefine()
+        return vsvobj.delete()
 
-    def start_vol(self, xml_desc):
-        """Create a storage volume.
-
-        Starts an existing storage vol. Creates a non-persistent domain if not
-        existing.
-        """
-
-        return self.conn.storageVolCreateXML(xml_desc)
-
-    def stop_vol(self, **kwargs):
-        """Create a storage volume.
-
-        Starts an existing storage volume. Creates a non-persistent volume if
-        not existing.
-        """
-
-        vsvobj = self._get_vsvobj(**kwargs)
-
-        return vsvobj.destroy()
-
-    def _get_vsvobj(self, **kwargs):
+    def _get_vsvobj(self, vspobj=None, **kwargs):
         """Helper function to get virStorageVol object.
 
         Accepts the following arguments, but only uses one (random).
         {
+            'name': <lookup by name, must provide vspobj>,
             'key': <globally unique key>,
             'path': <path of the storage volume>,
         }
         """
 
+        if 'name' in kwargs and not vspobj:
+            raise  # Custom exception, needs vspobj to lookup by name!
+
         lookup_table = {
+            'name': vspobj.storageVolLookupByName,
             'key': self.conn.storageVolLookupByKey,
             'path': self.conn.storageVolLookupByPath,
         }
