@@ -23,3 +23,11 @@ History
 * Implements storage module.
 * Improvements to test cases for network module.
 * More boiler plate changes.
+
+
+0.0.4 (2016-12-29)
+------------------
+
+* Implements node device module.
+* General improvements for test cases and also implementation code.
+* Some boiler plate changes.
