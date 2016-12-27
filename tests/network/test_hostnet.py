@@ -20,7 +20,7 @@ import pytest
 from libvirt_provider.network.hostnet import HostNet
 
 
-@pytest.fixture
+@pytest.fixture(autouse=False)
 def vnetobj():
 
     libvirt_conn = libvirt.open('qemu:///system')
