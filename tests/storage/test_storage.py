@@ -19,47 +19,45 @@ import shutil
 from libvirt_provider.storage.storage import Storage
 
 
-STORAGE_POOLS = list()
+STORAGE_POOLS = os.path.join(os.getcwd(), '.tlibvirtprov')
 
 
-@pytest.fixture(autouse=False)
+@pytest.fixture
 def vsobj():
 
     libvirt_conn = libvirt.open('qemu:///system')
     yield Storage(libvirt_conn)
     libvirt_conn.close()
-    _delete_all()
+    print("Hmmm, tear down \n\n\n ... \n\n\n how many times?")
+    _delete_storagepools()
 
 
 def _setup_dir(name=".tlibvirtprov", path=None):
     """Create directory in the local filesystem for storage pool."""
 
+    lib_dir = STORAGE_POOLS
+
+    if not os.path.exists(lib_dir):
+        os.mkdir(lib_dir)
+
     if not path:
-        cwd = os.getcwd()
-        path = os.path.join(cwd, name)
+        path = os.path.join(lib_dir, name)
 
     if not os.path.exists(path):
         path = os.path.abspath(path)
         os.mkdir(path)
-        STORAGE_POOLS.append(path)
 
     return path
 
 
-def _delete_dir(path):
+def _delete_storagepools():
     """Delete directory and its content recursively."""
 
     # Warning: Please make sure that storagepool under libvirt
     #          is undefined before running this function.
-    shutil.rmtree(path)
-    STORAGE_POOLS.remove(path)
+    global STORAGE_POOLS
 
-
-def _delete_all():
-    """Delete all created storage pools by this script."""
-
-    for sp in STORAGE_POOLS:
-        _delete_dir(sp)
+    shutil.rmtree(STORAGE_POOLS)
 
 
 def _get_storagepoolxml(name='test_provider_pool', path=None):
@@ -118,7 +116,8 @@ def test_persistent_storagepool_create_destroy(vsobj):
     spptr = vsobj.create_pool(sp_xml, flags=0)
     assert spptr
     assert spptr.isPersistent()
-    assert spptr.isActive() is 0
+    assert spptr.isActive() == 0
+    assert spptr.delete() == 0
     result = vsobj.destroy_pool(name='testcreatedestroy')
     assert result == 0
 
@@ -142,9 +141,9 @@ def test_non_persistent_storagepool_start_stop(vsobj):
     sp_xml = _get_storagepoolxml(name='testnpstartstop')
     spptr = vsobj.start_pool(sp_xml)
     assert spptr
-    assert spptr.isPersistent() is 0
+    assert spptr.isPersistent() == 0
     assert spptr.isActive()
-    assert vsobj.stop_pool(name='testnpstartstop') is 0
+    assert vsobj.stop_pool(name='testnpstartstop') == 0
 
 
 def test_non_persistent_storagepool_storagevol_start_stop(vsobj):
@@ -164,29 +163,69 @@ def test_persistent_storagepool_start_stop(vsobj):
     sp_xml = _get_storagepoolxml(name='testpstartstop')
     spptr = vsobj.create_pool(sp_xml, flags=0)
     assert spptr.isPersistent()
-    assert spptr.isActive() is 0
-    assert spptr.create() is 0
+    assert spptr.isActive() == 0
+    assert spptr.create() == 0
     assert spptr.isActive()
 
     with pytest.raises(libvirt.libvirtError):
         vsobj.destroy_pool(name='testpstartstop')
 
-    assert spptr.destroy() is 0
-    assert vsobj.destroy_pool(name='testpstartstop') is 0
+    assert spptr.destroy() == 0
+    assert spptr.delete() == 0
+    assert vsobj.destroy_pool(name='testpstartstop') == 0
 
 
 def test_list_pools(vsobj):
 
+    # Creating a few storage pools to ensure the validity of this test case.
+    # Esp. in the CI, freshly installed libvirt may not have existing storage
+    # pools.
+
+    spptrs = []
+
+    for i in range(5):
+
+        name = 'tListSPDefinedActive' + str(i)
+        sp_xml = _get_storagepoolxml(name)
+        spptr = vsobj.create_pool(sp_xml)
+        spptr.create()
+        spptrs.append(spptr)
+
+        name = 'tListSPActive' + str(i)
+        sp_xml = _get_storagepoolxml(name)
+        spptr = vsobj.start_pool(sp_xml)
+        spptrs.append(spptr)
+
+        name = 'tListSPDefinedNotActive' + str(i)
+        sp_xml = _get_storagepoolxml(name)
+        spptr = vsobj.create_pool(sp_xml)
+        spptrs.append(spptr)
+
     libvirt_conn = libvirt.open('qemu:///system')
-    expected_result = libvirt_conn.listAllStoragePools(0)
-    actual_result = vsobj.conn.listAllStoragePools(0)
-    assert expected_result.sort() is actual_result.sort()
+    expected_result = [sp.name() for sp in libvirt_conn.listAllStoragePools()]
+    actual_result = [sp.name() for sp in vsobj.conn.listAllStoragePools()]
+    assert expected_result == actual_result
     expected_result = libvirt_conn.listStoragePools()
     actual_result = vsobj.conn.listStoragePools()
-    assert expected_result.sort() is actual_result.sort()
+    assert expected_result == actual_result
     expected_result = libvirt_conn.listDefinedStoragePools()
     actual_result = vsobj.conn.listDefinedStoragePools()
-    assert expected_result.sort() is actual_result.sort()
+    assert expected_result == actual_result
+
+    # Cleanup: Delete created storage pools.
+    for spptr in spptrs:
+        active = spptr.isActive()
+        persistent = spptr.isPersistent()
+
+        if active and persistent:
+            assert spptr.destroy() == 0
+            assert spptr.delete() == 0
+            assert spptr.undefine() == 0
+        if active and not persistent:
+            assert spptr.destroy() == 0
+        if not active and persistent:
+            assert spptr.delete() == 0
+            assert spptr.undefine() == 0
 
 
 def test_clone_volume(vsobj):

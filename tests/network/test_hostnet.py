@@ -57,31 +57,31 @@ def test_persistent_network_create_destroy(vnetobj):
     netptr = vnetobj.create(net_xml)
     assert netptr
     assert netptr.isPersistent()
-    assert netptr.isActive() is 0
-    assert vnetobj.destroy(name='testpncreatedestroy') is 0
+    assert netptr.isActive() == 0
+    assert vnetobj.destroy(name='testpncreatedestroy') == 0
 
 
 def test_persistent_network_start_stop(vnetobj):
 
     net_xml = _get_netxml(name='testpnstartstop')
     netptr = vnetobj.create(net_xml)
-    assert netptr.create() is 0
+    assert netptr.create() == 0
     assert netptr.isActive()
-    assert netptr.destroy() is 0
-    assert vnetobj.destroy(name='testpnstartstop') is 0
+    assert netptr.destroy() == 0
+    assert vnetobj.destroy(name='testpnstartstop') == 0
 
 
 def test_persistent_network_undefine_when_active(vnetobj):
 
     net_xml = _get_netxml(name='testpnundefineactive')
     netptr = vnetobj.create(net_xml)
-    assert netptr.create() is 0
+    assert netptr.create() == 0
     assert netptr.isPersistent()
     assert netptr.isActive()
-    assert vnetobj.destroy(name='testpnundefineactive') is 0
-    assert netptr.isPersistent() is 0
+    assert vnetobj.destroy(name='testpnundefineactive') == 0
+    assert netptr.isPersistent() == 0
     assert netptr.isActive()
-    assert netptr.destroy() is 0
+    assert netptr.destroy() == 0
 
 
 def test_non_persistent_network_start_stop(vnetobj):
@@ -89,8 +89,8 @@ def test_non_persistent_network_start_stop(vnetobj):
     net_xml = _get_netxml(name='testnpstartstop')
     netptr = vnetobj.start(net_xml)
     assert netptr.isActive()
-    assert netptr.isPersistent() is 0
-    assert vnetobj.stop(name='testnpstartstop') is 0
+    assert netptr.isPersistent() == 0
+    assert vnetobj.stop(name='testnpstartstop') == 0
 
 
 def test_list_networks(vnetobj):
@@ -131,7 +131,7 @@ def test_update_config(vnetobj):
                                    section='ip_dhcp_range',
                                    parent_index=0,
                                    flags=flags)
-    assert actual_result is 0
+    assert actual_result == 0
 
     # First.
     xml_snippet = "<range start='10.7.5.115' end='10.7.5.155'></range>"
@@ -141,7 +141,7 @@ def test_update_config(vnetobj):
                                    section='ip_dhcp_range',
                                    parent_index=0,
                                    flags=flags)
-    assert actual_result is 0
+    assert actual_result == 0
 
     # Last.
     xml_snippet = "<range start='10.7.5.15' end='10.7.5.55'></range>"
@@ -151,7 +151,7 @@ def test_update_config(vnetobj):
                                    section='ip_dhcp_range',
                                    parent_index=0,
                                    flags=flags)
-    assert actual_result is 0
+    assert actual_result == 0
 
     # Destroy test network.
     vnetobj.destroy(name='testupdateconfig')
@@ -175,7 +175,7 @@ def test_update_all(vnetobj):
                                    section='ip_dhcp_range',
                                    parent_index=0,
                                    flags=flags)
-    assert actual_result is 0
+    assert actual_result == 0
 
     # First.
     xml_snippet = "<range start='10.7.5.115' end='10.7.5.155'></range>"
@@ -185,7 +185,7 @@ def test_update_all(vnetobj):
                                    section='ip_dhcp_range',
                                    parent_index=0,
                                    flags=flags)
-    assert actual_result is 0
+    assert actual_result == 0
 
     # Last.
     xml_snippet = "<range start='10.7.5.15' end='10.7.5.55'></range>"
@@ -195,7 +195,7 @@ def test_update_all(vnetobj):
                                    section='ip_dhcp_range',
                                    parent_index=0,
                                    flags=flags)
-    assert actual_result is 0
+    assert actual_result == 0
 
     # Destroy test network.
     netptr.destroy()
@@ -219,7 +219,7 @@ def test_update_live(vnetobj):
                                    section='ip_dhcp_range',
                                    parent_index=0,
                                    flags=flags)
-    assert actual_result is 0
+    assert actual_result == 0
 
     # First.
     xml_snippet = "<range start='10.7.5.115' end='10.7.5.155'></range>"
@@ -229,7 +229,7 @@ def test_update_live(vnetobj):
                                    section='ip_dhcp_range',
                                    parent_index=0,
                                    flags=flags)
-    assert actual_result is 0
+    assert actual_result == 0
 
     # Last.
     xml_snippet = "<range start='10.7.5.15' end='10.7.5.55'></range>"
@@ -239,7 +239,7 @@ def test_update_live(vnetobj):
                                    section='ip_dhcp_range',
                                    parent_index=0,
                                    flags=flags)
-    assert actual_result is 0
+    assert actual_result == 0
 
     # Destroy test network.
     vnetobj.stop(name='testupdatelive')
