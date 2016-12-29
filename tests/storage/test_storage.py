@@ -181,7 +181,10 @@ def test_list_pools(vsobj):
     # Esp. in the CI, freshly installed libvirt may not have existing storage
     # pools.
 
-    spptrs = []
+    spptrs = {
+        'persistent': [],
+        'active': []
+    }
 
     for i in range(5):
 
@@ -189,17 +192,18 @@ def test_list_pools(vsobj):
         sp_xml = _get_storagepoolxml(name)
         spptr = vsobj.create_pool(sp_xml)
         spptr.create()
-        spptrs.append(spptr)
+        spptrs['persistent'].append(spptr)
+        spptrs['active'].append(spptr)
 
         name = 'tListSPActive' + str(i)
         sp_xml = _get_storagepoolxml(name)
         spptr = vsobj.start_pool(sp_xml)
-        spptrs.append(spptr)
+        spptrs['active'].append(spptr)
 
         name = 'tListSPDefinedNotActive' + str(i)
         sp_xml = _get_storagepoolxml(name)
         spptr = vsobj.create_pool(sp_xml)
-        spptrs.append(spptr)
+        spptrs['persistent'].append(spptr)
 
     libvirt_conn = libvirt.open('qemu:///system')
     expected_result = [sp.name() for sp in libvirt_conn.listAllStoragePools()]
@@ -213,19 +217,11 @@ def test_list_pools(vsobj):
     assert expected_result == actual_result
 
     # Cleanup: Delete created storage pools.
-    for spptr in spptrs:
-        active = spptr.isActive()
-        persistent = spptr.isPersistent()
-
-        if active and persistent:
-            assert spptr.destroy() == 0
-            assert spptr.delete() == 0
-            assert spptr.undefine() == 0
-        if active and not persistent:
-            assert spptr.destroy() == 0
-        if not active and persistent:
-            assert spptr.delete() == 0
-            assert spptr.undefine() == 0
+    for spptr in spptrs['active']:
+        assert spptr.destroy() == 0
+    for spptr in spptrs['persistent']:
+        assert spptr.delete() == 0
+        assert spptr.undefine() == 0
 
 
 def test_clone_volume(vsobj):
