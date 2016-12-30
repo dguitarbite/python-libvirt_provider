@@ -64,13 +64,15 @@ class NodeDevice(object):
 
         self.kwargs = kwargs
 
-    def list_all_node_devices(self, cap, flags=0):
+    def list_all_node_devices(self, cap=None, flags=0):
+        """List node devices."""
 
-        return self.conn.list_all_node_devices(cap, flags)
+        return self.conn.listDevices(cap, flags=flags[flags])
 
-    def list_no_of_node_devices(self, cap, flags=0):
+    def list_no_of_node_devices(self, cap=None, flags=0):
+        """List number of node devices."""
 
-        return self.conn.numOfDevices(cap, flags)
+        return self.conn.numOfDevices(cap, flags=0)
 
     def create(self, xml_desc):
         """Define a new node device."""
@@ -80,9 +82,14 @@ class NodeDevice(object):
     def destroy(self, **kwargs):
         """Undefine an existing node device by name, uuid or uuidstr."""
 
-        vnodeobj = self._get_vnodeobj(**kwargs)
+        vnodeobjs = self._get_vnodeobj(**kwargs)
 
-        return vnodeobj.destroy()
+        node_device_destroy = []
+
+        for vnodeobj in vnodeobjs:
+            node_device_destroy.append(vnodeobj.destroy())
+
+        return node_device_destroy
 
     def dettach(self, **kwargs):
         """Dettach an existing node device from the host.
@@ -105,7 +112,7 @@ class NodeDevice(object):
 
         return vnodeobj.reAttach()
 
-    def _get_vnodeobj(self, **kwargs):
+    def _get_vnodeobj(self, cap, flags=0, **kwargs):
         """Helper function to get virNodeDevice object.
 
         Accepts the following arguments, but only uses one (random).
