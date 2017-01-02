@@ -56,7 +56,7 @@ def test_netint_start_stop(vnetintobj):
     assert True
 
 
-def test_netint_list(vnetobj):
+def test_netint_list(vnetintobj):
 
     assert True
 

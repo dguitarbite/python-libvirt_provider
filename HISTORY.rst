@@ -31,3 +31,14 @@ History
 * Implements node device module.
 * General improvements for test cases and also implementation code.
 * Some boiler plate changes.
+
+
+0.0.5 (2017-01-02)
+------------------
+
+* Implements NWFilter module.
+* Implements NetworkInterface module.
+* Implements Secrets module.
+* Implements Stream module.
+* Test cases are not yet implemented, working code but should be considered
+  unstable for the modules in scope of this release.
