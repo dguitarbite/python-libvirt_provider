@@ -64,10 +64,41 @@ class NodeDevice(object):
 
         self.kwargs = kwargs
 
-    def list_all_node_devices(self, cap=None, flags=0):
+    def list_all_node_devices(self, flags=['all']):
         """List node devices."""
 
-        return self.conn.listDevices(cap, flags=flags[flags])
+        import libvirt      # TODO(dbite): Re-factor this logic.
+
+        virflags = {
+            'all': 0,
+            'System capability':
+                libvirt.VIR_CONNECT_LIST_NODE_DEVICES_CAP_SYSTEM,
+            'PCI device': libvirt.VIR_CONNECT_LIST_NODE_DEVICES_CAP_PCI_DEV,
+            'USB device': libvirt.VIR_CONNECT_LIST_NODE_DEVICES_CAP_USB_DEV,
+            'USB interface':
+                libvirt.VIR_CONNECT_LIST_NODE_DEVICES_CAP_USB_INTERFACE,
+            'Network device': libvirt.VIR_CONNECT_LIST_NODE_DEVICES_CAP_NET,
+            'SCSI Host Bus Adapter':
+                libvirt.VIR_CONNECT_LIST_NODE_DEVICES_CAP_SCSI_HOST,
+            'SCSI Target':
+                libvirt.VIR_CONNECT_LIST_NODE_DEVICES_CAP_SCSI_TARGET,
+            'SCSI device': libvirt.VIR_CONNECT_LIST_NODE_DEVICES_CAP_SCSI,
+            'Storage device':
+                libvirt.VIR_CONNECT_LIST_NODE_DEVICES_CAP_STORAGE,
+            'FC Host Bus Adapter':
+                libvirt.VIR_CONNECT_LIST_NODE_DEVICES_CAP_FC_HOST,
+            'Capable of vport':
+                libvirt.VIR_CONNECT_LIST_NODE_DEVICES_CAP_VPORTS,
+            'Capable of scsi_generic':
+                libvirt.VIR_CONNECT_LIST_NODE_DEVICES_CAP_SCSI_GENERIC
+        }
+
+        all_flags = 0
+
+        for flag in flags:
+            all_flags = all_flags | virflags[flag]    # Bitwise 'or' flags.
+
+        return self.conn.listAllDevices(flags=all_flags)
 
     def list_no_of_node_devices(self, cap=None, flags=0):
         """List number of node devices."""
@@ -79,40 +110,32 @@ class NodeDevice(object):
 
         return self.conn.nodeDeviceCreateXML(xml_desc)
 
-    def destroy(self, **kwargs):
+    def destroy(self, cap, flags=0, **kwargs):
         """Undefine an existing node device by name, uuid or uuidstr."""
 
-        vnodeobjs = self._get_vnodeobj(**kwargs)
+        for vnodedevobj in self._get_vnodedevobjs(cap, flags=flags, **kwargs):
+            yield vnodedevobj.destroy()
 
-        node_device_destroy = []
-
-        for vnodeobj in vnodeobjs:
-            node_device_destroy.append(vnodeobj.destroy())
-
-        return node_device_destroy
-
-    def dettach(self, **kwargs):
+    def dettach(self, cap, flags=0, **kwargs):
         """Dettach an existing node device from the host.
 
         This allows the node device to be free for attaching to a guest.
         """
 
-        vnodeobj = self._get_vnodeobj(**kwargs)
+        for vnodedevobj in self._get_vnodedevobjs(cap, flags=flags, **kwargs):
+            yield vnodedevobj.dettach()
 
-        return vnodeobj.dettach()
-
-    def reattach(self, **kwargs):
+    def reattach(self, cap, flags=0, **kwargs):
         """Reattach a previously dettached node device.
 
         This allows the host to use a previously dettached node device. This
         method should be frequently called after dettaching a node device.
         """
 
-        vnodeobj = self._get_vnodeobj(**kwargs)
+        for vnodedevobj in self._get_vnodedevobjs(cap, flags=flags, **kwargs):
+            yield vnodedevobj.reAttach()
 
-        return vnodeobj.reAttach()
-
-    def _get_vnodeobj(self, cap, flags=0, **kwargs):
+    def _get_vnodedevobjs(self, cap, flags=0, **kwargs):
         """Helper function to get virNodeDevice object.
 
         Accepts the following arguments, but only uses one (random).
