@@ -19,3 +19,4 @@ pylint-runner==0.3
 pytest-cov==2.4.0
 pytest-mock==1.5.0
 libvirt-python>=2.5.0
+pytest-sugar>=0.8.0
