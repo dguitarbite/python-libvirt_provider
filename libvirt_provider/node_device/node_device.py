@@ -64,7 +64,7 @@ class NodeDevice(object):
 
         self.kwargs = kwargs
 
-    def list_all_node_devices(self, flags=['all']):
+    def list_all_node_devices(self, flags=('all')):
         """List node devices."""
 
         import libvirt      # TODO(dbite): Re-factor this logic.
@@ -103,7 +103,7 @@ class NodeDevice(object):
     def list_no_of_node_devices(self, cap=None, flags=0):
         """List number of node devices."""
 
-        return self.conn.numOfDevices(cap, flags=0)
+        return self.conn.numOfDevices(cap, flags=flags)
 
     def create(self, xml_desc):
         """Define a new node device."""
@@ -135,7 +135,7 @@ class NodeDevice(object):
         for vnodedevobj in self._get_vnodedevobjs(cap, flags=flags, **kwargs):
             yield vnodedevobj.reAttach()
 
-    def _get_vnodedevobjs(self, cap, flags=0, **kwargs):
+    def _get_vnodedevobjs(self, **kwargs):
         """Helper function to get virNodeDevice object.
 
         Accepts the following arguments, but only uses one (random).
