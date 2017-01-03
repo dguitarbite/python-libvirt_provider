@@ -61,7 +61,7 @@ class Stream(object):
 
         return vstreamobj.recv(nbytes)
 
-    def receive_all(self, vstreamobj, stream, buf, opaque):
+    def receive_all(self, vstreamobj, buf, opaque):
         """Recieve the entire data stream."""
 
         def handler(vstreamobj,  # virStream instance
