@@ -113,7 +113,7 @@ class NodeDevice(object):
     def destroy(self, cap, flags=0, **kwargs):
         """Undefine an existing node device by name, uuid or uuidstr."""
 
-        for vnodedevobj in self._get_vnodedevobjs(cap, flags=flags, **kwargs):
+        for vnodedevobj in self._get_vnodedevobjs(**kwargs):
             yield vnodedevobj.destroy()
 
     def dettach(self, cap, flags=0, **kwargs):
@@ -122,7 +122,7 @@ class NodeDevice(object):
         This allows the node device to be free for attaching to a guest.
         """
 
-        for vnodedevobj in self._get_vnodedevobjs(cap, flags=flags, **kwargs):
+        for vnodedevobj in self._get_vnodedevobjs(**kwargs):
             yield vnodedevobj.dettach()
 
     def reattach(self, cap, flags=0, **kwargs):
@@ -132,7 +132,7 @@ class NodeDevice(object):
         method should be frequently called after dettaching a node device.
         """
 
-        for vnodedevobj in self._get_vnodedevobjs(cap, flags=flags, **kwargs):
+        for vnodedevobj in self._get_vnodedevobjs(**kwargs):
             yield vnodedevobj.reAttach()
 
     def _get_vnodedevobjs(self, **kwargs):
