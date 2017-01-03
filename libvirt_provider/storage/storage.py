@@ -135,7 +135,7 @@ class Storage(object):
 
         vspobj = self._get_vspobj(**kwargs)
 
-        return vspobj.createXMLFrom(xml_desc, clonevol, flags=0)
+        return vspobj.createXMLFrom(xml_desc, clonevol, flags=flags)
 
     def destroy_vol(self, vspobj=None, **kwargs):
         """Undefine an existing storage domain by name, uuid or uuidstr."""
