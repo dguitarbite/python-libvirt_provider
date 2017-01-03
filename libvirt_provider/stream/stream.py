@@ -54,17 +54,17 @@ class Stream(object):
         written.
         """
 
-        return self.finish()
+        return vstreamobj.finish()
 
     def receive(self, vstreamobj, nbytes):
         """Opens a stream to receive data."""
 
-        return self.vstreamobj.recv(nbytes)
+        return vstreamobj.recv(nbytes)
 
     def receive_all(self, vstreamobj, stream, buf, opaque):
         """Recieve the entire data stream."""
 
-        def handler(stream,  # virStream instance
+        def handler(vstreamobj,  # virStream instance
                     buf,     # string containing received data.
                     opaque):  # extra data passed to recvAll as opaque.
             import os
@@ -73,4 +73,4 @@ class Stream(object):
 
             return os.write(fd, buf)
 
-        return self.recieve_all(handler, opaque)
+        return vstreamobj.recvAll(handler, opaque)
